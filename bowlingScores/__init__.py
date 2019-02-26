@@ -23,8 +23,14 @@ class Frame(object):
 
 
 def scoreGame(rolls):
-    game = Game(rolls)
-    return sum(frame.score for frame in frames(game))
+    try:
+        validateInputs(rolls)
+        game = Game(rolls)
+        return sum(frame.score for frame in frames(game))
+    except Exception as e:
+        print("Aborting with errors. check console/log")
+        pass
+    
 
 
 def frames(game):
@@ -61,6 +67,25 @@ def createStrike(game, index):
 
 
 # Checks. 
+
+def validateInputs(rolls):
+    try:
+        if isinstance(rolls, list):
+            for i in rolls:
+                if isinstance(i, int):
+                    if i > 10:
+                        raise Exception('Score is impossibly high')
+                    elif i < 0:
+                        raise Exception('Score is impossibly low')
+                else:
+                    raise Exception('Scores must be intergers')
+        else:
+            raise TypeError('Input must be of type list')
+
+
+    except Exception as error:
+        print('Caught this error: ' + repr(error))
+
 def isStrike(game, index):
     return game.pinsDown(index, 1) == 10
 
